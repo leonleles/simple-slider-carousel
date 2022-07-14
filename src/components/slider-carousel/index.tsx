@@ -61,23 +61,31 @@ export function SliderCarousel() {
   }
 
   function handleNext() {
-    const childNodes = imageCarouselList?.current?.childNodes;
+    const childNodes = imageCarouselList?.current?.childNodes?.length || 0;
+    const perPage = widthRail / widthChidrenItem;
 
-    if (scrollWidthList <= widthRail || childNodes?.length === 0) return;
+    if (scrollWidthList <= widthRail || childNodes === 0) return;
 
-    let count = 0;
+    const nextCurrent = lastItemVisible + perPage;
 
-    childNodes?.forEach((_, index) => {
-      const idx = index + 1;
-      if (idx > lastItemVisible && count < 10) {
-        count++;
-      }
-    });
+    let currentPageTranslate;
 
-    if (count > 0) {
-      const currentPageTranslate = widthChidrenItem * count;
+    if (nextCurrent <= childNodes) {
+      const minPerPage = perPage;
+      currentPageTranslate = widthChidrenItem * minPerPage;
 
-      setLastItemVisible(lastItemVisible + count);
+      setLastItemVisible(lastItemVisible + minPerPage);
+      setTranslate(translate + currentPageTranslate * -1);
+      return;
+    }
+
+    if (Math.min(nextCurrent, childNodes) > lastItemVisible) {
+      const nextCurrentMin =
+        Math.min(nextCurrent, childNodes) - lastItemVisible;
+      const newLastChild = lastItemVisible + nextCurrentMin;
+      currentPageTranslate = widthChidrenItem * nextCurrentMin;
+
+      setLastItemVisible(newLastChild);
       setTranslate(translate + currentPageTranslate * -1);
     }
   }
@@ -101,6 +109,11 @@ export function SliderCarousel() {
       <div className="image-carousel">
         <div className="image-carousel__item-list-wrapper">
           <div className="image-carousel__item-list" ref={imageCarouselList}>
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
             <ImageCarouselItem />
             <ImageCarouselItem />
             <ImageCarouselItem />
