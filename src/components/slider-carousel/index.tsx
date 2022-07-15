@@ -1,36 +1,19 @@
 import { useEffect, useRef, useState } from "react";
+
 import "./styles.scss";
 
 export function SliderCarousel() {
-  const [lastItemVisible, setLastItemVisible] = useState(0);
   const [widthRail, setWidthRail] = useState(0);
-  const [widthChidrenItem, setWidthChidrenItem] = useState(0);
   const [scrollWidthList, setScrollWidthList] = useState(0);
-  const [translate, setTranslate] = useState(0);
-  const imageCarouselList = useRef<HTMLDivElement>(null);
+  const imageCarouselListWrapper = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const firstChildrenWidth =
-      imageCarouselList?.current?.firstChild?.offsetWidth || 0;
-    const railWidth = imageCarouselList?.current?.offsetWidth || 0;
-    const scrollWidth = imageCarouselList?.current?.scrollWidth || 0;
+    const railWidth = imageCarouselListWrapper?.current?.offsetWidth || 0;
+    const scrollWidth = imageCarouselListWrapper?.current?.scrollWidth || 0;
 
-    if (firstChildrenWidth === 0 || railWidth === 0 || scrollWidth === 0)
-      return;
-
-    const perPage = railWidth / firstChildrenWidth;
-
-    if (perPage === 0) return;
-
-    setLastItemVisible(perPage);
-    setWidthChidrenItem(firstChildrenWidth);
     setWidthRail(railWidth);
     setScrollWidthList(scrollWidth);
-  }, [imageCarouselList]);
-
-  useEffect(() => {
-    imageCarouselList.current.style.transform = `translate(${translate}px, 0px)`;
-  }, [translate]);
+  }, [imageCarouselListWrapper]);
 
   function CategoryGrid() {
     return (
@@ -60,55 +43,36 @@ export function SliderCarousel() {
     );
   }
 
-  function handleNext() {
-    const childNodes = imageCarouselList?.current?.childNodes?.length || 0;
-    const perPage = widthRail / widthChidrenItem;
+  function carrouselEffect(right: boolean) {
+    let scrolling = 0;
+    const containerScrolled =
+      imageCarouselListWrapper?.current?.scrollLeft || 0;
 
-    if (scrollWidthList <= widthRail || childNodes === 0) return;
-
-    const nextCurrent = lastItemVisible + perPage;
-
-    let currentPageTranslate;
-
-    if (nextCurrent <= childNodes) {
-      const minPerPage = perPage;
-      currentPageTranslate = widthChidrenItem * minPerPage;
-
-      setLastItemVisible(lastItemVisible + minPerPage);
-      setTranslate(translate + currentPageTranslate * -1);
-      return;
+    if (right) {
+      if (widthRail + widthRail + containerScrolled <= scrollWidthList) {
+        scrolling = containerScrolled + widthRail;
+      } else {
+        scrolling = scrollWidthList;
+      }
+    } else {
+      scrolling = -widthRail;
     }
 
-    if (Math.min(nextCurrent, childNodes) > lastItemVisible) {
-      const nextCurrentMin =
-        Math.min(nextCurrent, childNodes) - lastItemVisible;
-      const newLastChild = lastItemVisible + nextCurrentMin;
-      currentPageTranslate = widthChidrenItem * nextCurrentMin;
-
-      setLastItemVisible(newLastChild);
-      setTranslate(translate + currentPageTranslate * -1);
-    }
-  }
-
-  function handlePrev() {
-    const perPage = widthRail / widthChidrenItem;
-    const backAmount = lastItemVisible - perPage;
-
-    const gotTo = Math.min(perPage, backAmount);
-
-    if (gotTo > 0) {
-      const currentPageTranslate = widthChidrenItem * gotTo;
-
-      setLastItemVisible(lastItemVisible - gotTo);
-      setTranslate(translate + currentPageTranslate);
-    }
+    imageCarouselListWrapper?.current?.scrollBy({
+      top: 0,
+      left: scrolling,
+      behavior: "smooth",
+    });
   }
 
   return (
     <div className="section">
       <div className="image-carousel">
-        <div className="image-carousel__item-list-wrapper">
-          <div className="image-carousel__item-list" ref={imageCarouselList}>
+        <div
+          className="image-carousel__item-list-wrapper"
+          ref={imageCarouselListWrapper}
+        >
+          <div className="image-carousel__item-list">
             <ImageCarouselItem />
             <ImageCarouselItem />
             <ImageCarouselItem />
@@ -116,6 +80,21 @@ export function SliderCarousel() {
             <ImageCarouselItem />
             <ImageCarouselItem />
             <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+            <ImageCarouselItem />
+
             <ImageCarouselItem />
             <ImageCarouselItem />
             <ImageCarouselItem />
@@ -123,7 +102,7 @@ export function SliderCarousel() {
         </div>
         <div
           className="carousel-arrow carousel-arrow--prev carousel-arrow--hint"
-          onClick={handlePrev}
+          onClick={() => carrouselEffect(false)}
         >
           <svg
             enable-background="new 0 0 13 20"
@@ -137,7 +116,7 @@ export function SliderCarousel() {
         </div>
         <div
           className="carousel-arrow carousel-arrow--next carousel-arrow--hint"
-          onClick={handleNext}
+          onClick={() => carrouselEffect(true)}
         >
           <svg
             enable-background="new 0 0 13 21"
