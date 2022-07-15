@@ -16,7 +16,7 @@ export const ExamplePokemonPage: React.FC = () => {
     pokemonApi
       .get("/pokemon", {
         params: {
-          limit: 33,
+          limit: 66,
         },
       })
       .then((response) => {
