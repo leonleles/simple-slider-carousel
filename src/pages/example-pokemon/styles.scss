@@ -3,4 +3,9 @@
   font-size: 2rem;
   color: #fff;
   margin-bottom: 60px;
+
+  @media only screen and (max-width: 768px) {
+    font-size: 1.3rem;
+    margin-left: 0.625rem;
+  }
 }

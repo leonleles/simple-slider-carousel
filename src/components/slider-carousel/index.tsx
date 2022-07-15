@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
+import { SliderCarouselMobile } from "../slider-carousel-mobile";
 
 import "./styles.scss";
 
@@ -7,9 +8,13 @@ interface Props {
 }
 
 export const SliderCarousel: React.FC<Props> = ({ children }) => {
+  const width = window.innerWidth;
   const [showPrev, setShowPrev] = useState(false);
   const [showNext, setShowNext] = useState(false);
   const imageCarouselListWrapper = useRef<HTMLDivElement>(null);
+
+  if (width <= 768)
+    return <SliderCarouselMobile>{children}</SliderCarouselMobile>;
 
   useEffect(() => {
     const { scrollLeft = 0 } = imageCarouselListWrapper?.current || {};
