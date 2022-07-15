@@ -1,0 +1,16 @@
+.image-carousel__item {
+    overflow-x: hidden;
+    list-style: none;
+    float: left;
+    touch-action: pan-y;
+    overflow-x: unset !important;
+
+    .home-category-list__group {
+      text-decoration: none;
+      color: rgba(0, 0, 0, 0.87);
+      display: block;
+      width: 140px;
+      box-sizing: border-box;
+      background: #ccc;
+    }
+  }

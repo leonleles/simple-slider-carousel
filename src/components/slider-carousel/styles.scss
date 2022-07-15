@@ -1,5 +1,5 @@
 .section {
-  width: 1200px;
+  width: 100%;
   max-width: 100%;
   margin: 0 auto;
   background: #f2f2f2;
@@ -27,72 +27,6 @@
       padding: 0;
       margin: 0;
       transition: all 500ms ease 0s;
-
-      .image-carousel__item {
-        overflow-x: hidden;
-        list-style: none;
-        float: left;
-        touch-action: pan-y;
-        overflow-x: unset !important;
-
-        .home-category-list__group {
-          text-decoration: none;
-          color: rgba(0, 0, 0, 0.87);
-          display: block;
-          width: 120px;
-          box-sizing: border-box;
-          background: #ccc;
-
-          .home-category-list__category-grid {
-            text-decoration: none;
-            color: rgba(0, 0, 0, 0.87);
-            border-right: 1px solid rgba(0, 0, 0, 0.05);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            text-align: center;
-            background-color: #fff;
-            display: block;
-            position: relative;
-            transition: transform 0.1s cubic-bezier(0.4, 0, 0.6, 1),
-              box-shadow 0.1s cubic-bezier(0.4, 0, 0.6, 1);
-
-            .home-category-list__category-grid__wrap {
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-
-              .image {
-                flex-shrink: 1;
-                width: 70px;
-                height: 70px;
-                margin-top: 10%;
-                margin-bottom: 10%;
-              }
-
-              .text-wrap {
-                width: 90%;
-                height: 3.125rem;
-                text-align: center;
-
-                span {
-                  color: rgba(0, 0, 0, 0.8);
-                  font-size: 0.875rem;
-                  text-decoration: none;
-                  line-height: 1.25rem;
-                  height: 2.5rem;
-                  margin-bottom: 0.625rem;
-                  word-break: break-word;
-                  overflow: hidden;
-                  display: -webkit-box;
-                  text-overflow: ellipsis;
-                  -webkit-box-orient: vertical;
-                  -webkit-line-clamp: 2;
-                }
-              }
-            }
-          }
-        }
-      }
     }
   }
 

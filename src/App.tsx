@@ -1,9 +1,7 @@
-import { SliderCarousel } from "./components/slider-carousel";
-
-import "./App.css";
+import { Router } from "./router";
 
 function App() {
-  return <SliderCarousel />;
+  return <Router />;
 }
 
 export default App;
