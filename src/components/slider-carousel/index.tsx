@@ -7,31 +7,35 @@ interface Props {
 }
 
 export const SliderCarousel: React.FC<Props> = ({ children }) => {
-  const [widthRail, setWidthRail] = useState(0);
-  const [scrollWidthList, setScrollWidthList] = useState(0);
+  const [showPrev, setShowPrev] = useState(false);
+  const [showNext, setShowNext] = useState(false);
   const imageCarouselListWrapper = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const railWidth = imageCarouselListWrapper?.current?.offsetWidth || 0;
-    const scrollWidth = imageCarouselListWrapper?.current?.scrollWidth || 0;
+    const { scrollLeft = 0 } = imageCarouselListWrapper?.current || {};
 
-    setWidthRail(railWidth);
-    setScrollWidthList(scrollWidth);
+    if (scrollLeft === 0) setShowNext(true);
   }, [imageCarouselListWrapper]);
 
   function carrouselEffect(right: boolean) {
     let scrolling = 0;
-    const containerScrolled =
-      imageCarouselListWrapper?.current?.scrollLeft || 0;
+    const {
+      scrollLeft = 0,
+      offsetWidth = 0,
+      scrollWidth = 0,
+    } = imageCarouselListWrapper?.current || {};
+    const scrolled = scrollWidth - offsetWidth;
+
+    if (scrolled === scrollLeft && right) return;
 
     if (right) {
-      if (widthRail + widthRail + containerScrolled <= scrollWidthList) {
-        scrolling = containerScrolled + widthRail;
+      if (offsetWidth + offsetWidth + scrollLeft <= scrollWidth) {
+        scrolling = scrollLeft + offsetWidth;
       } else {
-        scrolling = scrollWidthList;
+        scrolling = scrollWidth;
       }
     } else {
-      scrolling = -widthRail;
+      scrolling = -offsetWidth;
     }
 
     imageCarouselListWrapper?.current?.scrollBy({
@@ -41,17 +45,37 @@ export const SliderCarousel: React.FC<Props> = ({ children }) => {
     });
   }
 
+  function listenScroll(e: any) {
+    const { scrollLeft = 0, scrollWidth = 0, offsetWidth = 0 } = e.target || {};
+    const scrolled = scrollWidth - offsetWidth;
+
+    if (scrollLeft <= 0) {
+      setShowPrev(false);
+    } else if (showPrev === false) {
+      setShowPrev(true);
+    }
+
+    if (scrolled === scrollLeft) {
+      setShowNext(false);
+    } else if (showNext === false) {
+      setShowNext(true);
+    }
+  }
+
   return (
     <div className="section">
       <div className="image-carousel">
         <div
           className="image-carousel__item-list-wrapper"
           ref={imageCarouselListWrapper}
+          onScroll={listenScroll}
         >
           <div className="image-carousel__item-list">{children}</div>
         </div>
         <div
-          className="carousel-arrow carousel-arrow--prev carousel-arrow--hint"
+          className={`carousel-arrow carousel-arrow--prev carousel-arrow--hint ${
+            !showPrev ? "carousel-arrow--hidden" : ""
+          }`}
           onClick={() => carrouselEffect(false)}
         >
           <svg
@@ -65,7 +89,9 @@ export const SliderCarousel: React.FC<Props> = ({ children }) => {
           </svg>
         </div>
         <div
-          className="carousel-arrow carousel-arrow--next carousel-arrow--hint"
+          className={`carousel-arrow carousel-arrow--next carousel-arrow--hint ${
+            !showNext ? "carousel-arrow--hidden" : ""
+          }`}
           onClick={() => carrouselEffect(true)}
         >
           <svg
